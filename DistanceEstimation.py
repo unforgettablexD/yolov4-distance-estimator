@@ -39,7 +39,8 @@ def object_detector(image):
         # define color of each, object based on its class id 
         color= COLORS[int(classid) % len(COLORS)]
     
-        label = "%s : %f" % (class_names[classid[0]], score)
+        #label = "%s : %f" % (class_names[classid[0]], score)
+        label = "%s : %f" % (class_names[classid], score)
 
         # draw rectangle on and label on object
         cv.rectangle(image, box, color, 2)
@@ -47,10 +48,14 @@ def object_detector(image):
     
         # getting the data 
         # 1: class name  2: object width in pixels, 3: position where have to draw text(distance)
-        if classid ==0: # person class id 
-            data_list.append([class_names[classid[0]], box[2], (box[0], box[1]-2)])
+        #if classid ==0: # person class id
+        #    data_list.append([class_names[classid[0]], box[2], (box[0], box[1]-2)])
+        #elif classid ==67:
+        #    data_list.append([class_names[classid[0]], box[2], (box[0], box[1]-2)])
+        if classid ==0: # person class id
+            data_list.append([class_names[classid], box[2], (box[0], box[1]-2)])
         elif classid ==67:
-            data_list.append([class_names[classid[0]], box[2], (box[0], box[1]-2)])
+            data_list.append([class_names[classid], box[2], (box[0], box[1]-2)])
         # return list 
     return data_list
 
@@ -69,10 +74,23 @@ ref_person = cv.imread('ReferenceImages/image14.png')
 ref_mobile = cv.imread('ReferenceImages/image4.png')
 
 mobile_data = object_detector(ref_mobile)
-mobile_width_in_rf = mobile_data[1][1]
+if mobile_data:
+    mobile_width_in_rf = mobile_data[0][1]
+else:
+    print("Mobile not detected in reference image")
 
 person_data = object_detector(ref_person)
-person_width_in_rf = person_data[0][1]
+if person_data:
+    person_width_in_rf = person_data[0][1]
+else:
+    print("Person not detected in reference image")
+
+
+#mobile_data = object_detector(ref_mobile)
+#mobile_width_in_rf = mobile_data[1][1]
+
+#person_data = object_detector(ref_person)
+#person_width_in_rf = person_data[0][1]
 
 print(f"Person width in pixels : {person_width_in_rf} mobile width in pixel: {mobile_width_in_rf}")
 
